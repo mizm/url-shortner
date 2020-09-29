@@ -1,11 +1,9 @@
-package com.example.demo.board.infra;
+package com.ildong.urlshortner.url.infra;
 
-import com.example.demo.board.domain.Board;
+import com.ildong.urlshortner.url.domain.Url;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
-public interface BoardRepository extends JpaRepository<Board, Integer> {
+public interface UrlRepository extends JpaRepository<Url, Integer> {
    //Camel case로 알아서 맞추어서 할 수 있음.
 //   Optional<Board> findByDeletedAndId(boolean deleted, int id);
 }

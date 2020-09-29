@@ -1,4 +1,4 @@
-package com.example.demo.board.ui;
+package com.ildong.urlshortner.url.ui;
 
 public class ErrorResponse {
     String code;
