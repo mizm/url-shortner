@@ -2,6 +2,7 @@ package com.ildong.urlshortner.url.ui;
 
 import com.ildong.urlshortner.url.domain.Url;
 import com.ildong.urlshortner.url.infra.UrlRepository;
+import com.ildong.urlshortner.url.util.Decoder;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,56 +19,25 @@ public class UrlRestController {
 
     final private UrlRepository urlRepository;
     final private ModelMapper modelMapper;
-    private String Base62String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private int Base62 = 62;
 
-    private String Encode62(String temp) {
-        int id;
-        try {
-            id = Integer.parseInt(temp);
-
-            StringBuilder sb = new StringBuilder();
-        while(id > 0) {
-            sb.append(Base62String.charAt((int) (id % Base62)));
-            id /= Base62;
-        }
-        for(int i = sb.length(); i < 6; i++){
-            sb.append("a");
-        }
-        return sb.toString();
-        } catch(Exception e) {
-            throw new BadRequestException("잘못된 요청입니다.");
-        }
-    }
-
-    private int Decode62(String temp) {
-        int re = 0;
-        int power = 1;
-//        for (int i = temp.length()-1; i >= 0; i--) {
-        for(int i = 0; i < temp.length(); i++) {
-            re += Base62String.indexOf(temp.charAt(i)) * power;
-            power *= Base62;
-        }
-        return re;
-    }
     @Autowired
     public UrlRestController(UrlRepository urlRepository, ModelMapper modelMapper) {
         this.urlRepository = urlRepository;
         this.modelMapper = modelMapper;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.MOVED_PERMANENTLY)
     RedirectView url(@PathVariable String id){
-        Optional<Url> opBoard = urlRepository.findById(Decode62(id));
-        log.info("######################## decodedID : {}",Decode62(id));
+        Optional<Url> opBoard = urlRepository.findById(Decoder.decode62(id));
+        log.info("######################## decodedID : {}",Decoder.decode62(id));
         log.info("######################## ID : {}",id);
         log.info("######################## URL : {}",opBoard.get().getUrl());
         return opBoard.map(Url -> new RedirectView(Url.getUrl())).orElseGet(() -> new RedirectView("https://www.whodadoc.com/consumer/main"));
 
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping(value = "/")
     @ResponseStatus(value = HttpStatus.MOVED_PERMANENTLY)
     RedirectView board() {
          return new RedirectView("https://www.whodadoc.com/consumer/main");
