@@ -25,9 +25,9 @@ public class Decoder {
         }
     }
 
-    public static int decode62(String temp) {
-        int re = 0;
-        int power = 1;
+    public static long decode62(String temp) {
+        long re = 0;
+        long power = 1;
 //        for (int i = temp.length()-1; i >= 0; i--) {
         for(int i = 0; i < temp.length(); i++) {
             re += Base62String.indexOf(temp.charAt(i)) * power;

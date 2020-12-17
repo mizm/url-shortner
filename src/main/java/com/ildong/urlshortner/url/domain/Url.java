@@ -14,7 +14,7 @@ public class Url {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
 
     @NotNull
     private String url;
